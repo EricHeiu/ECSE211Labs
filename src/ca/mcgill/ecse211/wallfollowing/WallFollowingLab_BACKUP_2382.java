@@ -11,10 +11,15 @@ public class WallFollowingLab {
 
   // Parameters: adjust these for desired performance
 
-  private static final int bandCenter = 30; // Offset from the wall (cm)
-  private static final int bandWidth = 10; // Width of dead band (cm)
+  private static final int bandCenter = 20; // Offset from the wall (cm)
+  private static final int bandWidth = 3; // Width of dead band (cm)
   private static final int motorLow = 100; // Speed of slower rotating wheel (deg/sec)
-  private static final int motorHigh = 200; // Speed of the faster rotating wheel (deg/seec)
+<<<<<<< HEAD
+  private static final int motorHigh = 20; // Speed of the faster rotating wheel (deg/seec)
+=======
+  private static final int motorHigh = 3600; // Speed of the faster rotating wheel (deg/seec)
+>>>>>>> 8899947985607a51b3dfd9e736d4a170447dba86
+
 
 
   private static final Port usPort = LocalEV3.get().getPort("S1");
