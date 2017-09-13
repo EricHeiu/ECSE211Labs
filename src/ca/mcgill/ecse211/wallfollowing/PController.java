@@ -5,7 +5,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class PController implements UltrasonicController {
 
   /* Constants */
-  private static final int MOTOR_SPEED = 360;
+  private static final int MOTOR_SPEED = 0;
   private static final int FILTER_OUT = 20;
 
   private final int bandCenter;
@@ -18,7 +18,7 @@ public class PController implements UltrasonicController {
     this.bandWidth = bandwidth;
     this.filterControl = 0;
 
-    WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED); // Initalize motor rolling forward
+    WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED); // Initialize motor rolling forward
     WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
     WallFollowingLab.leftMotor.forward();
     WallFollowingLab.rightMotor.forward();
