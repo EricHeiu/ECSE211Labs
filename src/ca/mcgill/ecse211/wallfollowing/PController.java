@@ -70,7 +70,7 @@ public class PController implements UltrasonicController {
 		}
 
 		//Case 3: If Robot is too far away from the wall
-		else if (distError < 0) {
+		else{
 			int diff = calcProp(distError);
 			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
 			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
