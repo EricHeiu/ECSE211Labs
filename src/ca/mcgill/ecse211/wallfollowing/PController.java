@@ -5,11 +5,10 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class PController implements UltrasonicController {
 
 	/* Constants */
-	private static final int MOTOR_SPEED = 0;
+	private static final int MOTOR_SPEED = 125;
 	private static final int FILTER_OUT = 20;
 	private static final double PROPCONST = 15.0;
 	private static final int MAXCORRECTION = 50;
-
 
 	private final int bandCenter;
 	private final int bandWidth;
@@ -21,8 +20,8 @@ public class PController implements UltrasonicController {
 		this.bandWidth = bandwidth;
 		this.filterControl = 0;
 
-		WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED); // Initialize motor rolling forward
-		WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
+		WallFollowingLab.leftMotor.setSpeed(0); // Initialize motor rolling forward
+		WallFollowingLab.rightMotor.setSpeed(0);
 		WallFollowingLab.leftMotor.forward();
 		WallFollowingLab.rightMotor.forward();
 	}
@@ -52,41 +51,51 @@ public class PController implements UltrasonicController {
 
 		// TODO: process a movement based on the us distance passed in (P style)
 		int distError = bandCenter - distance;
-		int diff;
+
+		//Case 1: If Robot is within proper range
 		if (Math.abs(distError) <= bandWidth) {
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED); 
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED);
 			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
-		else if(distError > 0) {
-			diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED-diff); 
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED+diff);
-			WallFollowingLab.leftMotor.forward();
-			WallFollowingLab.rightMotor.forward();
-		}
-		else {
-			diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED+diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED-diff);
+
+		//Case 2: If Robot is too close to the wall
+		else if (distError > 0) {
+			int diff = calcProp(distError);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
 
+		//Case 3: If Robot is too far away from the wall
+		else if (distError < 0) {
+			int diff = calcProp(distError);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
+			WallFollowingLab.leftMotor.forward();
+			WallFollowingLab.rightMotor.forward();
+		}
 	}
 
+	//Method to calculate the proportional speed adjustment
 	public int calcProp(int diff) {
-		int correction; 
-		if(diff < 0) {
-			diff = -1*diff;
+		int correction = 0;
+
+		//Speed adjustment is proportional to the magnitude of error
+		if (diff < 0) {
+			diff = -diff;
+			correction = (int)(PROPCONST * (double)diff);
 		}
-		correction = (int)(PROPCONST * (double)diff);
-		if(correction >= MOTOR_SPEED) {
+		if (correction >= MOTOR_SPEED) {
 			correction = MAXCORRECTION;
+
 		}
 		return correction;
 	}
+
+
 
 	@Override
 	public int readUSDistance() {
