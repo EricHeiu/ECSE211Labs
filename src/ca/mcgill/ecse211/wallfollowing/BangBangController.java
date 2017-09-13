@@ -27,7 +27,6 @@ public class BangBangController implements UltrasonicController {
 	public void processUSData(int distance) {
 		this.distance = distance;
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
-		//boolean end = true;
 		
 		int distError = bandCenter - distance;
 			if(Math.abs(distError) <= bandwidth) {
