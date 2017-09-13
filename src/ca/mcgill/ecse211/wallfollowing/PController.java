@@ -5,7 +5,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class PController implements UltrasonicController {
 
   /* Constants */
-  private static final int MOTOR_SPEED = 125;
+  private static final int MOTOR_SPEED = 175;
   private static final int FILTER_OUT = 20;
 
   private final int bandCenter;
@@ -61,17 +61,17 @@ public class PController implements UltrasonicController {
     //Case 2: If Robot is too close to the wall
     else if (distError > 0) {
     	int diff = calcProp(distError);
-    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
-		WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
+    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
+		WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
 		WallFollowingLab.leftMotor.forward();
 		WallFollowingLab.rightMotor.forward();
     }
     
     //Case 3: If Robot is too far away from the wall
-    else if (distError < 0) {
+    else {
     	int diff = calcProp(distError);
-    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
-		WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
+    	WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
+		WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
 		WallFollowingLab.leftMotor.forward();
 		WallFollowingLab.rightMotor.forward();
     }
