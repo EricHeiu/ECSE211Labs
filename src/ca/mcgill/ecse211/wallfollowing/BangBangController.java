@@ -9,15 +9,16 @@ public class BangBangController implements UltrasonicController {
 	private final int motorLow;
 	private final int motorHigh;
 	private int distance;
-
+	private int initialSpeed = 0;
+	
 	public BangBangController(int bandCenter, int bandwidth, int motorLow, int motorHigh) {
 		// Default Constructor
 		this.bandCenter = bandCenter;
 		this.bandwidth = bandwidth;
 		this.motorLow = motorLow;
 		this.motorHigh = motorHigh;
-		WallFollowingLab.leftMotor.setSpeed(motorHigh); // Start robot moving forward
-		WallFollowingLab.rightMotor.setSpeed(motorHigh);
+		WallFollowingLab.leftMotor.setSpeed(initialSpeed); // Start robot moving forward
+		WallFollowingLab.rightMotor.setSpeed(initialSpeed);
 		WallFollowingLab.leftMotor.forward();
 		WallFollowingLab.rightMotor.forward();
 	}
