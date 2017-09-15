@@ -6,15 +6,19 @@ public class PController implements UltrasonicController {
 
 
 	/* Constants */
-	private static final int MOTOR_SPEED = 175;
+	private static final int MOTOR_SPEED = 150;
 	private static final int FILTER_OUT = 20;
-	private static final double PROPCONST = 0;
-	private static final int MAXCORRECTION = 0;
+	private static final double PROPCONST = 20;
+	private static final int MAXCORRECTION = 120;
 
 	private final int bandCenter;
 	private final int bandWidth;
 	private int distance;
 	private int filterControl;
+	
+	//variable for the proportional speed adjustment 
+	private int diff;
+	
 
 	public PController(int bandCenter, int bandwidth) {
 		this.bandCenter = bandCenter;
@@ -62,40 +66,43 @@ public class PController implements UltrasonicController {
 
 		//Case 2: If Robot is too close to the wall
 		else if (distError > 0) {
-			int diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
+			diff = calcProp(distError);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
 
 		//Case 3: If Robot is too far away from the wall
 		else{
-			int diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
+			diff = calcProp(distError);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
 	}
 
 	//Method to calculate the proportional speed adjustment
-	public int calcProp(int diff) {
+	public int calcProp(int dist) {
 		int correction = 0;
 
 		//Speed adjustment is proportional to the magnitude of error
-		if (diff < 0) {
-			diff = -diff;
-			correction = (int)(PROPCONST * (double)diff);
+		if (dist < 0) {
+			dist = -dist;
+			correction = (int)(PROPCONST * (double)dist);
 		}
+		
+		if (dist > 0) {
+			correction = (int)(PROPCONST * (double)dist);
+		}
+		
 		if (correction >= MOTOR_SPEED) {
 			correction = MAXCORRECTION;
 
 		}
 		return correction;
 	}
-
-
 
 	@Override
 	public int readUSDistance() {
