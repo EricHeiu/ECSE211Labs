@@ -63,8 +63,8 @@ public class PController implements UltrasonicController {
 		//Case 2: If Robot is too close to the wall
 		else if (distError > 0) {
 			int diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
@@ -72,8 +72,8 @@ public class PController implements UltrasonicController {
 		//Case 3: If Robot is too far away from the wall
 		else{
 			int diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
@@ -81,11 +81,14 @@ public class PController implements UltrasonicController {
 
 	//Method to calculate the proportional speed adjustment
 	public int calcProp(int diff) {
-		int correction = 0;
+		int correction=0;
 
 		//Speed adjustment is proportional to the magnitude of error
 		if (diff < 0) {
-			diff = -diff;
+			diff = -1*diff;
+			correction = (int)(PROPCONST * (double)diff);
+		}
+		else if (diff > 0) {
 			correction = (int)(PROPCONST * (double)diff);
 		}
 		if (correction >= MOTOR_SPEED) {
