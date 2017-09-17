@@ -6,10 +6,10 @@ public class PController implements UltrasonicController {
 
 
 	/* Constants */
-	private static final int MOTOR_SPEED = 200;
+	private static final int MOTOR_SPEED = 175;
 	private static final int FILTER_OUT = 20;
-	private static final double PROPCONST = 20;
-	private static final int MAXCORRECTION = 150;
+	private static final double PROPCONST = 10;
+	private static final int MAXCORRECTION = 100;
 
 	private final int bandCenter;
 	private final int bandWidth;
@@ -65,24 +65,17 @@ public class PController implements UltrasonicController {
 		}
 
 		//Case 2: If Robot is too close to the wall
-		else if (distError >0) {
+		else if (distError > 0) {
 			diff = calcProp(distError);
 			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
 			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
-		/*else if (distError <= 15) {
-			diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(-MOTOR_SPEED);
-			WallFollowingLab.rightMotor.setSpeed(-MOTOR_SPEED);
-			WallFollowingLab.leftMotor.forward();
-			WallFollowingLab.rightMotor.forward();
-		}*/
 
 		//Case 3: If Robot is too far away from the wall
-		else{
-			int diff = calcProp(distError);
+		else if(distError < 0){
+			diff = calcProp(distError);
 			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
 			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
 			WallFollowingLab.leftMotor.forward();
