@@ -10,7 +10,7 @@ public class BangBangController implements UltrasonicController {
 	private final int motorHigh;
 	private int distance;
 	private int initialSpeed = 0;
-	
+
 	public BangBangController(int bandCenter, int bandwidth, int motorLow, int motorHigh) {
 		// Default Constructor
 		this.bandCenter = bandCenter;
@@ -27,41 +27,33 @@ public class BangBangController implements UltrasonicController {
 	public void processUSData(int distance) {
 		this.distance = distance;
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
-		
+
 		int distError = bandCenter - distance;
-			if(Math.abs(distError) <= bandwidth) {
-				WallFollowingLab.leftMotor.setSpeed(motorHigh);
-				WallFollowingLab.rightMotor.setSpeed(motorHigh);
-				WallFollowingLab.leftMotor.forward();
-				WallFollowingLab.rightMotor.forward();
-			}
-			// if too close from the wall
-			else if(distError > 0) {
-				WallFollowingLab.leftMotor.setSpeed(motorHigh);
-				WallFollowingLab.rightMotor.setSpeed(motorLow);
-				WallFollowingLab.leftMotor.forward();
-				WallFollowingLab.rightMotor.forward();
-			}
-			/*else if(distError <= 15) {
-				WallFollowingLab.leftMotor.setSpeed(-motorHigh);
-				WallFollowingLab.rightMotor.setSpeed(-motorHigh);
-				WallFollowingLab.leftMotor.forward();
-				WallFollowingLab.rightMotor.forward();
-			}*/
-			else{
-				WallFollowingLab.leftMotor.setSpeed(motorLow);
-				WallFollowingLab.rightMotor.setSpeed(motorHigh);
-				WallFollowingLab.leftMotor.forward();
-				WallFollowingLab.rightMotor.forward();
-			}
-			/*if(distance ==21474) {
-				WallFollowingLab.leftMotor.setSpeed(0);
-				WallFollowingLab.rightMotor.setSpeed(0);
-				WallFollowingLab.leftMotor.forward();
-				WallFollowingLab.rightMotor.forward();
-			}*/
-			
-		
+
+		//if moving within desired range
+		if(Math.abs(distError) <= bandwidth) {
+			WallFollowingLab.leftMotor.setSpeed(motorHigh);
+			WallFollowingLab.rightMotor.setSpeed(motorHigh);
+			WallFollowingLab.leftMotor.forward();
+			WallFollowingLab.rightMotor.forward();
+		}
+
+		// if too close from the wall
+		else if(distError > 0) {
+			WallFollowingLab.leftMotor.setSpeed(330);
+			WallFollowingLab.rightMotor.setSpeed(65);
+			WallFollowingLab.leftMotor.forward();
+			WallFollowingLab.rightMotor.backward();
+		}
+
+		//if too far away from the wall
+		else {
+			WallFollowingLab.leftMotor.setSpeed(motorLow);
+			WallFollowingLab.rightMotor.setSpeed(motorHigh);
+			WallFollowingLab.leftMotor.forward();
+			WallFollowingLab.rightMotor.forward();
+		}
+
 
 	}
 
