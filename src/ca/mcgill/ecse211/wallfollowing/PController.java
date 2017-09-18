@@ -7,10 +7,10 @@ public class PController implements UltrasonicController {
 
 	/* Constants */
 
-	private static final int MOTOR_SPEED = 150;
+	private static final int MOTOR_SPEED = 170; //170
 	private static final int FILTER_OUT = 20;
-	private static final double PROPCONST = 7;
-	private static final int MAXCORRECTION = 100;
+	private static final double PROPCONST = 4; //4
+	private static final int MAXCORRECTION = 80; //80
 
 	private final int bandCenter;
 	private final int bandWidth;
@@ -58,32 +58,33 @@ public class PController implements UltrasonicController {
 		// TODO: process a movement based on the us distance passed in (P style)
 		int distError = bandCenter - distance;
 
-		//Case 1: If Robot is within proper range
-		if (Math.abs(distError) <= bandWidth) {
+		//Case 1: If Robot is within proper range, ignoring the gaps
+		if (Math.abs(distError) <= bandWidth && filterControl < FILTER_OUT) {
 			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED);
 			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
+			
 		}
 
 		//Case 2: If Robot is too close to the wall
 		else if (distError > 0) {
 			diff = calcProp(distError);
-			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - diff);
+			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED + (int) 2.3 * diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED - 2 * diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
 
 		//Case 3: If Robot is too far away from the wall
-		else if(distError < 0){
-			diff = calcProp(distError);
+
+			int diff = calcProp(distError);
+
 			WallFollowingLab.leftMotor.setSpeed(MOTOR_SPEED - diff);
-			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + diff);
+			WallFollowingLab.rightMotor.setSpeed(MOTOR_SPEED + (int) 0.65 * diff);
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}
-	}
 
 	//Method to calculate the proportional speed adjustment
 
@@ -91,14 +92,17 @@ public class PController implements UltrasonicController {
 		int correction = 0;
 
 		//Speed adjustment is proportional to the magnitude of error
-		
-		//if robot is too far away from the wall
+
+		//Case 1: too far away from the wall
+
 		if (dist < 0) {
 			dist = -dist;
 			correction = (int)(PROPCONST * (double)dist);
 		}
 		
-		//if robot is too close to the wall
+
+		//Case 2: too close to the wall
+
 		if (dist > 0) {
 			correction = (int)(PROPCONST * 2 * (double)dist);
 		}
