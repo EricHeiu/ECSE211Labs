@@ -6,9 +6,10 @@ public class PController implements UltrasonicController {
 
 
 	/* Constants */
-	private static final int MOTOR_SPEED = 175;
+
+	private static final int MOTOR_SPEED = 150;
 	private static final int FILTER_OUT = 20;
-	private static final double PROPCONST = 10;
+	private static final double PROPCONST = 7;
 	private static final int MAXCORRECTION = 100;
 
 	private final int bandCenter;
@@ -37,7 +38,8 @@ public class PController implements UltrasonicController {
 		// signal.
 		// (n.b. this was not included in the Bang-bang controller, but easily
 		// could have).
-		//
+		
+		//enters on gaps, turns, and  
 		if (distance >= 255 && filterControl < FILTER_OUT) {
 			// bad value, do not set the distance var, however do increment the
 			// filter value
@@ -89,13 +91,16 @@ public class PController implements UltrasonicController {
 		int correction = 0;
 
 		//Speed adjustment is proportional to the magnitude of error
+		
+		//if robot is too far away from the wall
 		if (dist < 0) {
 			dist = -dist;
 			correction = (int)(PROPCONST * (double)dist);
 		}
 		
+		//if robot is too close to the wall
 		if (dist > 0) {
-			correction = (int)(PROPCONST * (double)dist);
+			correction = (int)(PROPCONST * 2 * (double)dist);
 		}
 		
 		if (correction >= MOTOR_SPEED) {
