@@ -30,21 +30,35 @@ public class BangBangController implements UltrasonicController {
 		this.distance = distance;
 		
 		//enters on gaps, turns, and random error
-		if (distance >= 255 && filterControl < FILTER_OUT) {
+		
+		if (distance >= 200 && filterControl < FILTER_OUT) {
 			// bad value, do not set the distance var, however do increment the
 			// filter value
 			filterControl++;
-		} else if (distance >= 255) {
+		} 
+		
+		else if (distance >= 200 && distance <= 300) {
 			// We have repeated large values, so there must actually be nothing
 			// there: leave the distance alone
 			this.distance = distance;
 		
-		} else {
+		} 
+		
+		else if (distance < 200){
 			// distance went below 255: reset filter and leave
 			// distance alone.
 			filterControl = 0;
 			this.distance = distance;
 		}
+		
+		else if (distance > 21400) {
+			WallFollowingLab.leftMotor.setSpeed(400);
+			WallFollowingLab.rightMotor.setSpeed(70);
+			WallFollowingLab.leftMotor.forward();
+			WallFollowingLab.rightMotor.backward();
+		}
+		
+		
 		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
 
 		int distError = bandCenter - distance;
@@ -67,8 +81,8 @@ public class BangBangController implements UltrasonicController {
 
 		//if too far away from the wall
 		else {
-			WallFollowingLab.leftMotor.setSpeed(160);
-			WallFollowingLab.rightMotor.setSpeed(225);
+			WallFollowingLab.leftMotor.setSpeed(130); //160
+			WallFollowingLab.rightMotor.setSpeed(250); //225
 			WallFollowingLab.leftMotor.forward();
 			WallFollowingLab.rightMotor.forward();
 		}

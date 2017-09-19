@@ -13,8 +13,10 @@ public class WallFollowingLab {
 
 
 
-  private static final int bandCenter = 28; // Offset from the wall (cm) 28
-  private static final int bandWidth = 5; // Width of dead band (cm) 5
+  private static final int bangBandCenter = 28; // Offset from the wall (cm) 28
+  private static final int pContBandCenter = 25;
+  private static final int pContBandWidth = 3; // Width of dead band (cm) 3
+  private static final int bangBandWidth = 3;
   private static final int motorLow = 150; // Speed of slower rotating wheel (deg/sec)
   private static final int motorHigh = 225; // Speed of the faster rotating wheel (deg/sec)
 
@@ -36,9 +38,9 @@ public class WallFollowingLab {
     // Setup controller objects
 
     BangBangController bangbangController =
-        new BangBangController(bandCenter, bandWidth, motorLow, motorHigh);
+        new BangBangController(bangBandCenter, bangBandWidth, motorLow, motorHigh);
 
-    PController pController = new PController(bandCenter, bandWidth);
+    PController pController = new PController(pContBandCenter, pContBandWidth);
 
     // Setup ultrasonic sensor
     // There are 4 steps involved:
