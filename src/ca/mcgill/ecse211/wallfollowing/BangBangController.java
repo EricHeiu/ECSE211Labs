@@ -57,7 +57,8 @@ public class BangBangController implements UltrasonicController {
 			WallFollowingLab.rightMotor.forward();
 		}
 
-		// if too close from the wall
+		//Case 2: when the robot is too close to the wall, the left wheel will turn faster
+		//and the right wheel will reverse slowly to provide more free space 
 		else if(distError > 0) {
 			WallFollowingLab.leftMotor.setSpeed(330);
 			WallFollowingLab.rightMotor.setSpeed(65);
