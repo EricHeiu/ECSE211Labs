@@ -1,4 +1,4 @@
-package ca.mcgill.ecse211.wallfollowing;
+package ca.mcgill.ecse211.lab1;
 
 import lejos.hardware.sensor.*;
 import lejos.hardware.ev3.LocalEV3;
@@ -13,10 +13,12 @@ public class WallFollowingLab {
 
 
 
-  private static final int bandCenter = 28; // Offset from the wall (cm) 28
-  private static final int bandWidth = 5; // Width of dead band (cm) 5
-  private static final int motorLow = 150; // Speed of slower rotating wheel (deg/sec)
-  private static final int motorHigh = 225; // Speed of the faster rotating wheel (deg/sec)
+  private static final int bangBandCenter = 40; // Offset from the wall for bangbang(cm)
+  private static final int pContBandCenter = 40; // Offset from the wall for p Controller(cm)
+  private static final int pContBandWidth = 5; // Width of dead band for p Controller(cm) 
+  private static final int bangBandWidth = 3; // Width of dead band for bangbang (cm) 
+  private static final int motorLow = 130; // Speed of slower rotating wheel (deg/sec)
+  private static final int motorHigh = 230; // Speed of the faster rotating wheel (deg/sec)
 
   private static final Port usPort = LocalEV3.get().getPort("S1");
   public static final EV3LargeRegulatedMotor leftMotor =
@@ -36,9 +38,9 @@ public class WallFollowingLab {
     // Setup controller objects
 
     BangBangController bangbangController =
-        new BangBangController(bandCenter, bandWidth, motorLow, motorHigh);
+        new BangBangController(bangBandCenter, bangBandWidth, motorLow, motorHigh);
 
-    PController pController = new PController(bandCenter, bandWidth);
+    PController pController = new PController(pContBandCenter, pContBandWidth);
 
     // Setup ultrasonic sensor
     // There are 4 steps involved:
