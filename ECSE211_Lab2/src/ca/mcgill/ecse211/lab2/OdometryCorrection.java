@@ -11,7 +11,7 @@ import lejos.hardware.port.SensorPort;
 public class OdometryCorrection extends Thread {
   private static final long CORRECTION_PERIOD = 10;
   private Odometer odometer;
-  private static final Port usPort = LocalEV3.get().getPort("S1");
+  private static final Port lightPort = LocalEV3.get().getPort("S1");
 
   // constructor
   public OdometryCorrection(Odometer odometer) {
