@@ -45,12 +45,12 @@ public class Odometer extends Thread {
 
 			nowTachoL = leftMotor.getTachoCount();
 			nowTachoR = rightMotor.getTachoCount();
-			distLWheel = Math.PI * 15.8 * (nowTachoL-lastTachoL)/180; //left wheel displacement
-			distRWheel = Math.PI * 15.8 *(nowTachoR-lastTachoR)/180; //right wheel displacement
+			distLWheel = Math.PI * OdometryLab.WHEEL_RADIUS * (nowTachoL-lastTachoL)/180; //left wheel displacement
+			distRWheel = Math.PI * OdometryLab.WHEEL_RADIUS *(nowTachoR-lastTachoR)/180; //right wheel displacement
 			lastTachoL = nowTachoL;
 			lastTachoR = nowTachoR;
 			deltaD = 0.5 * (distLWheel + distRWheel); //vehicle displacement
-			deltaT = (distLWheel - distRWheel)/15.8; //change in heading
+			deltaT = (distLWheel - distRWheel)/OdometryLab.TRACK * (180/Math.PI); //change in heading
 
 
 			synchronized (lock) {
@@ -61,7 +61,7 @@ public class Odometer extends Thread {
 				 */
 				theta += deltaT; // TODO replace example value
 				dX = deltaD * Math.sin(theta);
-				dY = deltaD * Math.sin(theta);
+				dY = deltaD * Math.cos(theta);
 				x = x + dX;
 				y = y + dY;
 			}
