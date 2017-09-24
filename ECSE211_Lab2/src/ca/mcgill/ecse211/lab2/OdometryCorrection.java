@@ -5,7 +5,7 @@ package ca.mcgill.ecse211.lab2;
 
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
-import lejos.hardware.port.SensorPort;
+//import lejos.hardware.port.SensorPort;
 
 
 public class OdometryCorrection extends Thread {
