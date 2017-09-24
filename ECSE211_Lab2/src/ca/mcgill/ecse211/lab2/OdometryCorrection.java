@@ -3,9 +3,15 @@
  */
 package ca.mcgill.ecse211.lab2;
 
+import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.port.Port;
+import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3ColorSensor;
+
 public class OdometryCorrection extends Thread {
   private static final long CORRECTION_PERIOD = 10;
   private Odometer odometer;
+  private static final Port usPort = LocalEV3.get().getPort("S1");
 
   // constructor
   public OdometryCorrection(Odometer odometer) {
@@ -20,7 +26,12 @@ public class OdometryCorrection extends Thread {
       correctionStart = System.currentTimeMillis();
 
       //TODO Place correction implementation here
-
+      @SuppressWarnings("resource") // Because we don't bother to close this resource
+      SensorModes usSensor = new EV3LightSensor(usPort); // usSensor is the instance
+      SampleProvider usDistance = usSensor.getMode("Distance"); // usDistance provides samples from
+                                                                // this instance
+      float[] usData = new float[usDistance.sampleSize()]; // usData is the buffer in which data are
+                                                           // returned
       // this ensure the odometry correction occurs only once every period
       correctionEnd = System.currentTimeMillis();
       if (correctionEnd - correctionStart < CORRECTION_PERIOD) {

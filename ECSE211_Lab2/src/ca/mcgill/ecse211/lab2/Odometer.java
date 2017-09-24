@@ -60,8 +60,8 @@ public class Odometer extends Thread {
          * 
          */
         theta += deltaT; // TODO replace example value
-        dX = deltaD * Math.sin(theta);
-        dY = deltaD * Math.cos(theta);
+        dX = deltaD * Math.cos(theta);
+        dY = deltaD * Math.sin(theta);
         x = x + dX;
         y = y + dY;
       }
