@@ -3,6 +3,7 @@ package ca.mcgill.ecse211.lab2;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Odometer extends Thread {
+
 	// robot position
 	private double x;
 	private double y;
@@ -50,7 +51,9 @@ public class Odometer extends Thread {
 			lastTachoL = nowTachoL;
 			lastTachoR = nowTachoR;
 			deltaD = 0.5 * (distLWheel + distRWheel); //vehicle displacement
-			deltaT = (distLWheel - distRWheel)/OdometryLab.TRACK * (180/Math.PI); //change in heading
+
+			deltaT = (distLWheel - distRWheel)/OdometryLab.TRACK; //change in heading
+
 
 
 			synchronized (lock) {
@@ -59,9 +62,11 @@ public class Odometer extends Thread {
 				 * and theta in this block. Do not perform complex math
 				 * 
 				 */
-				theta += deltaT; // TODO replace example value
-				dX = deltaD * Math.sin(theta);
-				dY = deltaD * Math.cos(theta);
+
+				theta += deltaT*180/Math.PI; // TODO replace example value
+				dX = deltaD * Math.sin(theta*Math.PI/180);
+				dY = deltaD * Math.cos(theta*Math.PI/180);
+
 				x = x + dX;
 				y = y + dY;
 			}

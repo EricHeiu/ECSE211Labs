@@ -3,9 +3,15 @@
  */
 package ca.mcgill.ecse211.lab2;
 
+import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.port.Port;
+import lejos.hardware.port.SensorPort;
+
+
 public class OdometryCorrection extends Thread {
   private static final long CORRECTION_PERIOD = 10;
   private Odometer odometer;
+  private static final Port lightPort = LocalEV3.get().getPort("S1");
 
   // constructor
   public OdometryCorrection(Odometer odometer) {
@@ -20,7 +26,7 @@ public class OdometryCorrection extends Thread {
       correctionStart = System.currentTimeMillis();
 
       //TODO Place correction implementation here
-
+     
       // this ensure the odometry correction occurs only once every period
       correctionEnd = System.currentTimeMillis();
       if (correctionEnd - correctionStart < CORRECTION_PERIOD) {
