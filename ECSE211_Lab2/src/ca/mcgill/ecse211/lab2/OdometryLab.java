@@ -14,8 +14,6 @@ import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 
 public class OdometryLab {
-
-	private static final Port lightPort = LocalEV3.get().getPort("S1");
 	private static final EV3LargeRegulatedMotor leftMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
@@ -23,7 +21,8 @@ public class OdometryLab {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 
 	public static final double WHEEL_RADIUS = 2.1;
-	public static final double TRACK = 15.8; //15.8
+	public static final double TRACK = 14.4; //15.8
+
 
 	public static void main(String[] args) {
 		int buttonChoice;
