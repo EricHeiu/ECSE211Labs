@@ -20,29 +20,21 @@ public class OdometryCorrection extends Thread {
 	//Initialize the lightSensor
 	private static Port lightPort = LocalEV3.get().getPort("S1");
 	@SuppressWarnings("resource") // Because we don't bother to close this resource
-	SensorModes lightSensor = new EV3ColorSensor(lightPort);
-	SampleProvider lightSample = ((EV3ColorSensor) lightSensor).getRedMode(); 
+	EV3ColorSensor lightSensor = new EV3ColorSensor(lightPort); //SensorModes
+	SampleProvider lightSample = lightSensor.getRedMode();
 	float[] lightData = new float[lightSample.sampleSize()]; 
 	
 	//added code
 	
-	private static boolean rolling = true;
-	private static int status;
-	private static int numSamples=0;
+//	private double startingX = this.odometer.getX();
+//	private double startingY = this.odometer.getY();
+	private int counter1 = 0;
+	private int counter2 = 0;
+	private int counter3 = 0;
+	private int counter4 = 0;
+
 	
-	private static int theta;
-	private static boolean isReset;
-	private static int counter1;
-	private static int counter2;
-	private static int counter3;
-	private static int counter4;
-	private static double currentY;
-	private static double correctY;
-	private static double sensorY;
-	private static double sensorX;
-	
-	private static boolean detectLine;
-	
+
 
 	// constructor
 	public OdometryCorrection(Odometer odometer) {
@@ -55,67 +47,73 @@ public class OdometryCorrection extends Thread {
 
 		while (true) {
 			correctionStart = System.currentTimeMillis();
-
+			
 			//TODO Place correction implementation here
 			lightSample.fetchSample(lightData, 0);
-			//System.out.println(lightData[0]);
-		
-			theta = (int)this.odometer.getTheta();
-			//&& lightData[0] == 0.15
-			if(theta <= 3 && theta >= 0 && lightData[0] > 0.11 && lightData[0] < 0.17) {
+			float curData = lightData[0]; //current light data
+			
+			//Case 1: robot moves along left side of rectangle
+			//Y-pos increases only
+			if (0 < this.odometer.getTheta() && this.odometer.getTheta() < 3 
+					&& curData > 0.11 && curData < 0.17) {
 				Sound.beep();
-				if(counter1 == 0) {
-					this.odometer.setX(0);
-					this.odometer.setY(-15.24);
-					counter1= counter1 + 2;
+				if (counter1 == 0) {
+					//this.odometer.setX(-15.24);
+					this.odometer.setY(0);
+					counter1++;
 				}
 				else {
-					counter1++; 
-					sensorY = (counter1-1) * SQUARE_LENGTH;
-					this.odometer.setY(sensorY);
-				}
-			}
-			else if(theta <= 93 && theta >= 87 && lightData[0] > 0.11 && lightData[0] < 0.17) {
-				Sound.beep();
-				if(counter2 == 0) {
-					this.odometer.setX(0);
-					this.odometer.setY(76.2);
-					counter2 = counter2 + 2;
-				}
-				else {
-					counter2++;
-					sensorX = (counter2 - 1) * SQUARE_LENGTH;
-					this.odometer.setX(sensorX);
-				}
-			}
-			else if(theta >= 177 && theta <= 183 && lightData[0] > 0.11 && lightData[0] < 0.17) {
-				Sound.beep();
-				if(counter3 == 0) {
-					this.odometer.setX(76.2);
-					this.odometer.setY(60.96);
-					counter3 = counter3 + 2;
-				}
-				else {
-					
-					sensorY = (counter3) * SQUARE_LENGTH;
-					this.odometer.setY(sensorY);
-					counter3--;
-				}
-			}
-			else if(theta >= 267 && theta <= 273 && lightData[0] > 0.11 && lightData[0] < 0.17) {
-			  Sound.beep();
-				if(counter4 == 0) {
-					this.odometer.setX(60.96);
-					this.odometer.setY(-15.24);
-					counter4 = counter4 + 2;
-				}
-				else {
-					sensorX = (counter4) * SQUARE_LENGTH;
-					this.odometer.setX(sensorX);
-					counter4--;
+					//this.odometer.setX(-15.24);
+					this.odometer.setY(counter1 * 30.48);
+					counter1++;
 				}
 			}
 			
+			//Case 2: robot moves along top side of rectangle
+			//X-pos increases only
+			if (87 < this.odometer.getTheta() && this.odometer.getTheta() < 93
+					&& curData > 0.11 && curData < 0.17) {
+				Sound.beep();
+				if (counter2 == 0) {
+					this.odometer.setX(0);
+					counter2++;
+				}
+				else {
+					this.odometer.setX(counter2 * 30.48);
+					counter2++;
+				}
+				
+			}
+			
+			//Case 3: robot moves along right side of rectangle
+			//Y-pos decreases only
+			if (177 < this.odometer.getTheta() && this.odometer.getTheta() < 183 
+					&& curData > 0.11 && curData < 0.17) {
+				Sound.beep();
+				if (counter3 == 0) {
+					this.odometer.setY((counter2 - 1) * 30.48);
+					counter3++;
+				}
+				else {
+					this.odometer.setY(((counter2 - 1) * 30.48) - (counter3 * 30.48));
+					counter3++;
+				}
+			}
+			
+			//Case 4: robot moves along bottom side of rectangle 
+			//X-pos decreases only 
+			if (267 < this.odometer.getTheta() && this.odometer.getTheta() < 273 
+					&& curData > 0.11 && curData < 0.17) {
+				Sound.beep();
+				if (counter4 == 0) {
+					this.odometer.setX((counter3 - 1) * 30.48);
+					counter4++;
+				}
+				else {
+					this.odometer.setX((counter3 - 1) * 30.48 - (counter4 * 30.48));
+					counter4++;
+				}
+			}
 			
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
