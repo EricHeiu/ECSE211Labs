@@ -6,8 +6,7 @@ package ca.mcgill.ecse211.lab2;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class SquareDriver {
-  private static final int FORWARD_SPEED_L = 250;
-  private static final int FORWARD_SPEED_R = 250;
+  private static final int FORWARD_SPEED = 250;
   private static final int ROTATE_SPEED = 150;
 
   public static void drive(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor,
@@ -27,9 +26,9 @@ public class SquareDriver {
     }
 
     for (int i = 0; i < 4; i++) {
-      // drive forward two tiles
-      leftMotor.setSpeed(FORWARD_SPEED_L);
-      rightMotor.setSpeed(FORWARD_SPEED_R);
+      // drive forward three tiles
+      leftMotor.setSpeed(FORWARD_SPEED);
+      rightMotor.setSpeed(FORWARD_SPEED);
 
       leftMotor.rotate(convertDistance(leftRadius, 91.44), true);
       rightMotor.rotate(convertDistance(rightRadius, 91.44), false);

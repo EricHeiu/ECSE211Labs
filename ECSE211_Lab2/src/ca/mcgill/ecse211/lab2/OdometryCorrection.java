@@ -59,7 +59,7 @@ public class OdometryCorrection extends Thread {
 
 			//Case 1: robot moves along left side of rectangle, its orientation is between 0 to 3 degrees
 			//Robot only crosses horizontal black lines, so only Y-pos is corrected (Y increases)
-			if (0 < this.odometer.getTheta() && this.odometer.getTheta() < 3 
+			if ((358 < this.odometer.getTheta() || this.odometer.getTheta() < 3) 
 					&& curData > correctionRange1 && curData < correctionRange2) { 
 				Sound.beep();
 				/* if counter1 = 0, it means the robot is reaching the 1st black line on
