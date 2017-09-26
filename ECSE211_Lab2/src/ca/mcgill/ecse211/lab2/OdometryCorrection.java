@@ -42,26 +42,25 @@ public class OdometryCorrection extends Thread {
 	// run method (required for Thread)
 	public void run() {
 		long correctionStart, correctionEnd;
-
+		Sound.setVolume(80);
 		while (true) {
 			correctionStart = System.currentTimeMillis();
 			
 			//TODO Place correction implementation here
 			lightSample.fetchSample(lightData, 0);
 			float curData = lightData[0]; //current light data
+			//System.out.println(curData);
 			
 			//Case 1: robot moves along left side of rectangle
 			//Y-pos increases only
 			if (0 < this.odometer.getTheta() && this.odometer.getTheta() < 3 
-					&& curData > 0.11 && curData < 0.17) {
+					&& curData > 0.25 && curData < 0.35) { //0.11, 0.17
 				Sound.beep();
 				if (counter1 == 0) {
-					//this.odometer.setX(-15.24);
 					this.odometer.setY(0);
 					counter1++;
 				}
 				else {
-					//this.odometer.setX(-15.24);
 					this.odometer.setY(counter1 * 30.48);
 					counter1++;
 				}
@@ -70,7 +69,7 @@ public class OdometryCorrection extends Thread {
 			//Case 2: robot moves along top side of rectangle
 			//X-pos increases only
 			if (87 < this.odometer.getTheta() && this.odometer.getTheta() < 93
-					&& curData > 0.11 && curData < 0.17) {
+					&& curData > 0.25 && curData < 0.35) {
 				Sound.beep();
 				if (counter2 == 0) {
 					this.odometer.setX(0);
@@ -86,7 +85,7 @@ public class OdometryCorrection extends Thread {
 			//Case 3: robot moves along right side of rectangle
 			//Y-pos decreases only
 			if (177 < this.odometer.getTheta() && this.odometer.getTheta() < 183 
-					&& curData > 0.11 && curData < 0.17) {
+					&& curData > 0.25 && curData < 0.35) {
 				Sound.beep();
 				if (counter3 == 0) {
 					this.odometer.setY((counter2 - 1) * 30.48);
@@ -101,7 +100,7 @@ public class OdometryCorrection extends Thread {
 			//Case 4: robot moves along bottom side of rectangle 
 			//X-pos decreases only 
 			if (267 < this.odometer.getTheta() && this.odometer.getTheta() < 273 
-					&& curData > 0.11 && curData < 0.17) {
+					&& curData > 0.25 && curData < 0.35) {
 				Sound.beep();
 				if (counter4 == 0) {
 					this.odometer.setX((counter3 - 1) * 30.48);
