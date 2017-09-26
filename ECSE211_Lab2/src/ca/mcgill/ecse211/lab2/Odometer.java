@@ -63,7 +63,17 @@ public class Odometer extends Thread {
 				 * 
 				 */
 				// TODO replace example value
-				theta += deltaT*180/Math.PI;  //update robot's orientation
+				//if theta exceeds 359.9, reset it back to 0 degrees
+				if(((deltaT*180/Math.PI) + theta)  >= 360){
+					theta = 0;
+				}
+				//if theta is below 0, set it to 359.9 degrees
+				else if(((deltaT*180/Math.PI) + theta)  < 0){
+					theta = 359.9;
+				}
+				else{
+				theta += deltaT*180/Math.PI; //update robot's orientation
+				}
 				dX = deltaD * Math.sin(theta*Math.PI/180); //compute x-displacement
 				dY = deltaD * Math.cos(theta*Math.PI/180); //compute y-displacement
 

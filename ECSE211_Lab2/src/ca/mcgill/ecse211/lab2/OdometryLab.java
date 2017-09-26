@@ -21,7 +21,7 @@ public class OdometryLab {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 
 	public static final double WHEEL_RADIUS = 2.1;
-	public static final double TRACK = 14.32; //14.32
+	public static final double TRACK = 14.33; 
 
 	public static void main(String[] args) {
 		int buttonChoice;
