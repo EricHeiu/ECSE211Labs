@@ -5,15 +5,15 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 public class Odometer extends Thread {
 
 	// robot position
-	private double x;
-	private double y;
-	private double theta;
+	private double x; //current x posisition
+	private double y; //current y position
+	private double theta; //current orientation
 	private int leftMotorTachoCount;
 	private int rightMotorTachoCount;
-	private int lastTachoL;
-	private int lastTachoR;
-	private int nowTachoL;
-	private int nowTachoR;
+	private int lastTachoL; //previous tacho count of left motor
+	private int lastTachoR; //previous tacho count of right motor
+	private int nowTachoL; //current tacho count of left motor
+	private int nowTachoR; //current tacho count of right motor
 	private EV3LargeRegulatedMotor leftMotor;
 	private EV3LargeRegulatedMotor rightMotor;
 	private double distLWheel, distRWheel, deltaD, deltaT, dX, dY;
@@ -44,15 +44,15 @@ public class Odometer extends Thread {
 			updateStart = System.currentTimeMillis();
 			// TODO put (some of) your odometer code here
 
-			nowTachoL = leftMotor.getTachoCount();
+			nowTachoL = leftMotor.getTachoCount(); //get current tacho counts for both motors
 			nowTachoR = rightMotor.getTachoCount();
 			distLWheel = Math.PI * OdometryLab.WHEEL_RADIUS * (nowTachoL-lastTachoL)/180; //left wheel displacement
 			distRWheel = Math.PI * OdometryLab.WHEEL_RADIUS *(nowTachoR-lastTachoR)/180; //right wheel displacement
-			lastTachoL = nowTachoL;
-			lastTachoR = nowTachoR;
-			deltaD = 0.5 * (distLWheel + distRWheel); //vehicle displacement
+			lastTachoL = nowTachoL; //save current tacho counts for next iteration
+			lastTachoR = nowTachoR; 
+			deltaD = 0.5 * (distLWheel + distRWheel); //calculate vehicle displacement
 
-			deltaT = (distLWheel - distRWheel)/OdometryLab.TRACK; //change in heading
+			deltaT = (distLWheel - distRWheel)/OdometryLab.TRACK; //compute change in robot's orientation
 
 
 
@@ -62,13 +62,13 @@ public class Odometer extends Thread {
 				 * and theta in this block. Do not perform complex math
 				 * 
 				 */
+				// TODO replace example value
+				theta += deltaT*180/Math.PI;  //update robot's orientation
+				dX = deltaD * Math.sin(theta*Math.PI/180); //compute x-displacement
+				dY = deltaD * Math.cos(theta*Math.PI/180); //compute y-displacement
 
-				theta += deltaT*180/Math.PI; // TODO replace example value
-				dX = deltaD * Math.sin(theta*Math.PI/180);
-				dY = deltaD * Math.cos(theta*Math.PI/180);
-
-				x = x + dX;
-				y = y + dY;
+				x = x + dX; //update current x-displacement 
+				y = y + dY; //update current y-displacement
 			}
 
 			// this ensures that the odometer only runs once every period
