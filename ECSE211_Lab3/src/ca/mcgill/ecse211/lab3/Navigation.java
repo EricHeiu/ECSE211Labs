@@ -1,20 +1,23 @@
 package ca.mcgill.ecse211.lab3;
 
-public class Navigation {
+import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
-	private static int[][] coordinates = { {2,1}, {1,1}, {1,2}, {2,0} };
+public class Navigation {
 	
-	private static double curX = 0.0;
-	private static double curY = 0;
+	private double curX = 0.0;
+	private double curY = 0.0;
+	private double angToTurn;
 	
-	private static double angToTurn;
+	private static final int FORWARD_SPEED = 200;
+	private static final int ROTATE_SPEED = 100;
 	
+
+	private static final EV3LargeRegulatedMotor leftMotor = 
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	
-	
-	
-	public static void main(String[] args) { 
-		travelTo(2,1);
-	}
+	private static final EV3LargeRegulatedMotor rightMotor = 
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	/* private int getX(int index) {
 		
 	}
@@ -22,9 +25,12 @@ public class Navigation {
 	private int getY(int index) {
 		
 	}*/
+	public Navigation(double x, double y) {
+		this.curX = x;
+		this.curY = y;
+	}
 	
-	
-	private static void travelTo(double destX, double destY) {
+	public void travelTo(double destX, double destY) {
 		if(destX > 0) {
 			angToTurn = Math.atan((destY - curY) / (destX - curX));
 			turnTo(angToTurn);
@@ -41,8 +47,9 @@ public class Navigation {
 		
 	}
 	
-	private static void turnTo(double theta) {
-		
+	private void turnTo(double theta) {
+		leftMotor.rotate((int)theta, true);
+	    rightMotor.rotate((int) theta, false);
 	}
 	
 	private boolean isNavigating() {
