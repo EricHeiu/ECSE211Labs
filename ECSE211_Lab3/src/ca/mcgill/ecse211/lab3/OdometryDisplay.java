@@ -2,7 +2,7 @@
  * OdometryDisplay.java
  */
 
-package ca.mcgill.ecse211.lab2;
+package ca.mcgill.ecse211.lab3;
 
 import lejos.hardware.lcd.TextLCD;
 

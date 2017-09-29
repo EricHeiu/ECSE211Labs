@@ -1,6 +1,6 @@
 // Lab2.java
 
-package ca.mcgill.ecse211.lab2;
+package ca.mcgill.ecse211.lab3;
 
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
