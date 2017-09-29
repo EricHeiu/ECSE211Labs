@@ -1,6 +1,6 @@
 // Lab2.java
 
-package ca.mcgill.ecse211.lab2;
+package ca.mcgill.ecse211.lab3;
 
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
@@ -78,7 +78,7 @@ public class OdometryLab {
 			// spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
 				public void run() {
-					SquareDriver.drive(leftMotor, rightMotor, WHEEL_RADIUS, WHEEL_RADIUS, TRACK);
+					//SquareDriver.drive(leftMotor, rightMotor, WHEEL_RADIUS, WHEEL_RADIUS, TRACK);
 				}
 			}).start();
 		}

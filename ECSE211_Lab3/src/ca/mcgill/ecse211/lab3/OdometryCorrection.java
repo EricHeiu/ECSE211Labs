@@ -1,7 +1,7 @@
 /*
  * OdometryCorrection.java
  */
-package ca.mcgill.ecse211.lab2;
+package ca.mcgill.ecse211.lab3;
 
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
@@ -20,8 +20,8 @@ public class OdometryCorrection extends Thread {
 	private static Port lightPort = LocalEV3.get().getPort("S1");
 	@SuppressWarnings("resource") // Because we don't bother to close this resource
 	EV3ColorSensor lightSensor = new EV3ColorSensor(lightPort); 
-	SampleProvider lightSample = lightSensor.getRedMode(); //Red Mode measures the intensity of reflected light
-	float[] lightData = new float[lightSample.sampleSize()]; //buffer to store sample data
+	SampleProvider lightSample = lightSensor.getRedMode();
+	float[] lightData = new float[lightSample.sampleSize()]; 
 
 	/*These counters count how many times the robot crosses the black line
 	 * when traveling along each side of the arbitrary rectangle.
@@ -58,7 +58,6 @@ public class OdometryCorrection extends Thread {
 
 
 			//Case 1: robot moves along left side of rectangle, its orientation is between 0 to 3 degrees
-			//or 358 to 360 degrees
 			//Robot only crosses horizontal black lines, so only Y-pos is corrected (Y increases)
 			if ((358 < this.odometer.getTheta() || this.odometer.getTheta() < 3) 
 					&& curData > correctionRange1 && curData < correctionRange2) { 
@@ -107,10 +106,10 @@ public class OdometryCorrection extends Thread {
 					&& curData > correctionRange1 && curData < correctionRange2) {
 				Sound.beep();
 				/* if counter3 = 0, robot is crossing 1st black line on the right side of 
-				 * the rectangle, therefore correct y-pos based on the value of counter1
+				 * the rectangle, therefore correct y-pos based on the value of counter2
 				 */
 				if (counter3 == 0) {
-					this.odometer.setY((counter1 - 1) * tileWidth);
+					this.odometer.setY((counter2 - 1) * tileWidth);
 					counter3++;
 				}
 				/* if counter3 != 0, robot is crossing black lines other than the 1st one, 
@@ -118,7 +117,7 @@ public class OdometryCorrection extends Thread {
 				 * from its original displacement on the top point of the right side
 				 */
 				else {
-					this.odometer.setY(((counter1 - 1) * tileWidth) - (counter3 * tileWidth));
+					this.odometer.setY(((counter2 - 1) * tileWidth) - (counter3 * tileWidth));
 					counter3++;
 				}
 			}
@@ -129,10 +128,10 @@ public class OdometryCorrection extends Thread {
 					&& curData > correctionRange1 && curData < correctionRange2) {
 				Sound.beep();
 				/* if counter4 = 0, robot is crossing 1st black line on the bottom side of 
-				 * the rectangle, therefore correct x-pos based on the value of counter2
+				 * the rectangle, therefore correct x-pos based on the value of counter3
 				 */
 				if (counter4 == 0) {
-					this.odometer.setX((counter2 - 1) * tileWidth);
+					this.odometer.setX((counter3 - 1) * tileWidth);
 					counter4++;
 				}
 				/* if counter4 != 0, robot is crossing black lines other than the 1st one, 
@@ -140,7 +139,7 @@ public class OdometryCorrection extends Thread {
 				 * from its original displacement on the bottom point of the right side
 				 */
 				else {
-					this.odometer.setX((counter2 - 1) * tileWidth - (counter4 * tileWidth));
+					this.odometer.setX((counter3 - 1) * tileWidth - (counter4 * tileWidth));
 					counter4++;
 				}
 			}
