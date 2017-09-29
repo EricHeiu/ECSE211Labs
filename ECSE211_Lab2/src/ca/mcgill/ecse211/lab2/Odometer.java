@@ -63,11 +63,11 @@ public class Odometer extends Thread {
 				 * 
 				 */
 				// TODO replace example value
-				//if theta exceeds 359.9, reset it back to 0 degrees
+				//if current theta exceeds 359.9, reset it back to 0 degrees
 				if(((deltaT*180/Math.PI) + theta)  >= 360){
 					theta = 0;
 				}
-				//if theta is below 0, set it to 359.9 degrees
+				//if current theta is below 0, set it to 359.9 degrees
 				else if(((deltaT*180/Math.PI) + theta)  < 0){
 					theta = 359.9;
 				}
