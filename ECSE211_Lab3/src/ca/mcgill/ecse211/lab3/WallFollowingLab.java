@@ -1,4 +1,4 @@
-package ca.mcgill.ecse211.lab1;
+package ca.mcgill.ecse211.lab3;
 
 import lejos.hardware.sensor.*;
 import lejos.hardware.ev3.LocalEV3;
@@ -40,7 +40,7 @@ public class WallFollowingLab {
     BangBangController bangbangController =
         new BangBangController(bangBandCenter, bangBandWidth, motorLow, motorHigh);
 
-    PController pController = new PController(pContBandCenter, pContBandWidth);
+   // PController pController = new PController(pContBandCenter, pContBandWidth);
 
     // Setup ultrasonic sensor
     // There are 4 steps involved:
@@ -72,8 +72,8 @@ public class WallFollowingLab {
         printer = new Printer(option, bangbangController);
         break;
       case Button.ID_RIGHT: // Proportional control selected
-        usPoller = new UltrasonicPoller(usDistance, usData, pController);
-        printer = new Printer(option, pController);
+       // usPoller = new UltrasonicPoller(usDistance, usData, pController);
+        //printer = new Printer(option, pController);
         break;
       default:
         System.out.println("Error - invalid button"); // None of the above - abort
