@@ -12,12 +12,8 @@ public class Navigation {
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 100;
 	
-
-	private static final EV3LargeRegulatedMotor leftMotor = 
-			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	
-	private static final EV3LargeRegulatedMotor rightMotor = 
-			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	private EV3LargeRegulatedMotor leftMotor;
+	private EV3LargeRegulatedMotor rightMotor;
 	/* private int getX(int index) {
 		
 	}
@@ -25,7 +21,9 @@ public class Navigation {
 	private int getY(int index) {
 		
 	}*/
-	public Navigation(double x, double y) {
+	public Navigation(double x, double y, EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor) {
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
 		this.curX = x;
 		this.curY = y;
 	}
@@ -48,6 +46,9 @@ public class Navigation {
 	}
 	
 	private void turnTo(double theta) {
+
+		leftMotor.setSpeed(100);
+		rightMotor.setSpeed(100);
 		leftMotor.rotate((int)theta, true);
 	    rightMotor.rotate((int) theta, false);
 	}
