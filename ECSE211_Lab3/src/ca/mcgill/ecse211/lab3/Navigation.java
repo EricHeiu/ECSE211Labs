@@ -7,7 +7,8 @@ public class Navigation {
 	
 	private double curX = 0.0;
 	private double curY = 0.0;
-	private double angToTurn;
+	private double destTheta = 0;
+	private double curTheta = 0;
 	
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 100;
@@ -28,25 +29,28 @@ public class Navigation {
 		this.rightMotor = rightMotor;
 		this.curX = x;
 		this.curY = y;
+		
 	}
 	
 	public void travelTo(double destX, double destY) {
 		System.out.println(destX);
 		System.out.println(destY);
+		//x > 0
 		if((destX - curX) > 0) {
-			angToTurn = Math.atan((destY - curY) / (destX - curX));
-			angToTurn = (angToTurn*180)/Math.PI;
-			System.out.println(angToTurn);
-			turnTo(angToTurn);
+			destTheta = Math.atan((destY - curY) / (destX - curX));
+			destTheta = (destTheta*180)/Math.PI; //convert to rad from deg
+			System.out.println(destTheta);
+			turnTo(destTheta);
 		}
+		//x < 0, y > 0
 		else if((destX - curX)< 0 && (destY - curY) > 0) {
-			angToTurn = Math.atan((destY - curY) / (destX - curX)) + Math.PI;
-			turnTo(angToTurn);
+			destTheta = Math.atan((destY - curY) / (destX - curX)) + Math.PI;
+			turnTo(destTheta);
 		}
-		
+		//x < 0, y < 0
 		else if((destX - curX) < 0 && (destY - curY) < 0) {
-			angToTurn = Math.atan((destY - curY) / (destX - curX)) - Math.PI;
-			turnTo(angToTurn);
+			destTheta = Math.atan((destY - curY) / (destX - curX)) - Math.PI;
+			turnTo(destTheta);
 		}
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
@@ -55,20 +59,11 @@ public class Navigation {
 	}
 	
 	private void turnTo(double theta) {
-<<<<<<< HEAD
-
-		leftMotor.setSpeed(100);
-		rightMotor.setSpeed(100);
-		leftMotor.rotate((int)theta, true);
-	    rightMotor.rotate((int) theta, false);
-	    
-=======
 		
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 		leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), true);
 	    rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), false);
->>>>>>> 28a3bfa796b2aec646704792c137f075f0d21eaa
 	}
 	
 	
