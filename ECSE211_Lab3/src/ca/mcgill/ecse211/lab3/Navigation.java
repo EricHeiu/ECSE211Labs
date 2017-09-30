@@ -7,11 +7,13 @@ public class Navigation {
 	
 	private double curX = 0.0;
 	private double curY = 0.0;
-	private double destTheta = 0;
+
 	private double curTheta = 0;
+	private double destTheta;
+
 	
 	private static final int FORWARD_SPEED = 200;
-	private static final int ROTATE_SPEED = 100;
+	private static final int ROTATE_SPEED = 130;
 	public static final double WHEEL_RADIUS = 2.1;
 	public static final double TRACK = 14.33; 
 	
@@ -38,20 +40,40 @@ public class Navigation {
 		//x > 0
 		if((destX - curX) > 0) {
 			destTheta = Math.atan((destY - curY) / (destX - curX));
-			destTheta = (destTheta*180)/Math.PI; //convert to rad from deg
-			System.out.println(destTheta);
-			turnTo(destTheta);
+
+			destTheta = 90 - (destTheta*180)/Math.PI;
+			/*System.out.println(angToTurn);
+			turnTo(angToTurn);*/
 		}
-		//x < 0, y > 0
-		else if((destX - curX)< 0 && (destY - curY) > 0) {
+		else if((destX - curX)< 0 && (destY - curY) >= 0) {
 			destTheta = Math.atan((destY - curY) / (destX - curX)) + Math.PI;
-			turnTo(destTheta);
+			destTheta = (destTheta*180)/Math.PI;
+			/*System.out.println(angToTurn);
+			turnTo(angToTurn);*/
+
 		}
 		//x < 0, y < 0
 		else if((destX - curX) < 0 && (destY - curY) < 0) {
 			destTheta = Math.atan((destY - curY) / (destX - curX)) - Math.PI;
-			turnTo(destTheta);
+			destTheta = 90- (destTheta*180)/Math.PI;
+			/*System.out.println(angToTurn);
+			turnTo(angToTurn);*/
+
 		}
+		
+		if((destTheta - curTheta) > -180 && (destTheta - curTheta) < 180) {
+			destTheta = destTheta - curTheta;
+		}
+		else if((destTheta - curTheta) < -180) {
+			destTheta = (destTheta - curTheta) + 360;
+		}
+		else if((destTheta - curTheta) > 180) {
+			destTheta = (destTheta - curTheta) - 360;
+		}
+		curTheta = destTheta;
+		System.out.println(destTheta);
+		turnTo(destTheta);
+		
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 		//leftMotor.forward();
@@ -62,8 +84,14 @@ public class Navigation {
 		
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
+		if(360 - theta < theta) {
 		leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), true);
 	    rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), false);
+		}
+		else if(360 - theta >= theta) {
+		leftMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), true);
+		rightMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), false);
+		}
 	}
 	
 	
