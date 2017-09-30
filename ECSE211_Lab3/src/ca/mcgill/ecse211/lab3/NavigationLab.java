@@ -52,7 +52,7 @@ public class NavigationLab {
 
 
 		if (buttonChoice == Button.ID_LEFT) {
-			
+			t.clear();
 			navigation.travelTo(2, 1);
 			
 			/*leftMotor.forward();
@@ -80,6 +80,7 @@ public class NavigationLab {
 			odometer.start();
 			odometryDisplay.start();
 
+			navigation.travelTo(1, 1);
 			if(buttonChoice == Button.ID_RIGHT){
 				odometryCorrection.start();
 			}
@@ -95,4 +96,6 @@ public class NavigationLab {
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
 	}
+	
+	
 }
