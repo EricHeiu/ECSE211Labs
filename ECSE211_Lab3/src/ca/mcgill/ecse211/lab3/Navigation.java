@@ -7,8 +7,8 @@ public class Navigation {
 	
 	private double curX = 0.0;
 	private double curY = 0.0;
-	private double curAngle = 0.0;
-	private double angToTurn;
+	private double curTheta = 0;
+	private double destTheta;
 	
 	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 130;
@@ -35,36 +35,37 @@ public class Navigation {
 		System.out.println(destX);
 		System.out.println(destY);
 		if((destX - curX) > 0) {
-			angToTurn = Math.atan((destY - curY) / (destX - curX));
-			angToTurn = 90 - (angToTurn*180)/Math.PI;
+			destTheta = Math.atan((destY - curY) / (destX - curX));
+			destTheta = 90 - (destTheta*180)/Math.PI;
 			/*System.out.println(angToTurn);
 			turnTo(angToTurn);*/
 		}
 		else if((destX - curX)< 0 && (destY - curY) >= 0) {
-			angToTurn = Math.atan((destY - curY) / (destX - curX)) + Math.PI;
-			angToTurn = (angToTurn*180)/Math.PI;
+			destTheta = Math.atan((destY - curY) / (destX - curX)) + Math.PI;
+			destTheta = (destTheta*180)/Math.PI;
 			/*System.out.println(angToTurn);
 			turnTo(angToTurn);*/
 		}
 		
 		else if((destX - curX) < 0 && (destY - curY) < 0) {
-			angToTurn = Math.atan((destY - curY) / (destX - curX)) - Math.PI;
-			angToTurn = 90- (angToTurn*180)/Math.PI;
+			destTheta = Math.atan((destY - curY) / (destX - curX)) - Math.PI;
+			destTheta = 90- (destTheta*180)/Math.PI;
 			/*System.out.println(angToTurn);
 			turnTo(angToTurn);*/
 		}
 		
-		if((angToTurn - curAngle) > -180 && (angToTurn - curAngle) < 180) {
-			angToTurn = angToTurn - curAngle;
+		if((destTheta - curTheta) > -180 && (destTheta - curTheta) < 180) {
+			destTheta = destTheta - curTheta;
 		}
-		else if((angToTurn - curAngle) < -180) {
-			angToTurn = (angToTurn - curAngle) + 360;
+		else if((destTheta - curTheta) < -180) {
+			destTheta = (destTheta - curTheta) + 360;
 		}
-		else if((angToTurn - curAngle) > 180) {
-			angToTurn = (angToTurn - curAngle) - 360;
+		else if((destTheta - curTheta) > 180) {
+			destTheta = (destTheta - curTheta) - 360;
 		}
-		System.out.println(angToTurn);
-		turnTo(angToTurn);
+		curTheta = destTheta;
+		System.out.println(destTheta);
+		turnTo(destTheta);
 		
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
@@ -76,8 +77,14 @@ public class Navigation {
 		
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
+		if(360 - theta < theta) {
 		leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), true);
 	    rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), false);
+		}
+		else if(360 - theta >= theta) {
+		leftMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta), true);
+		rightMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta), false);
+		}
 	}
 	
 	private boolean isNavigating() {
