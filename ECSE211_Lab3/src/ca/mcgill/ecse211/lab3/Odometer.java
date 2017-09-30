@@ -46,13 +46,13 @@ public class Odometer extends Thread {
 
 			nowTachoL = leftMotor.getTachoCount(); //get current tacho counts for both motors
 			nowTachoR = rightMotor.getTachoCount();
-			distLWheel = Math.PI * OdometryLab.WHEEL_RADIUS * (nowTachoL-lastTachoL)/180; //left wheel displacement
-			distRWheel = Math.PI * OdometryLab.WHEEL_RADIUS *(nowTachoR-lastTachoR)/180; //right wheel displacement
+			distLWheel = Math.PI * NavigationLab.WHEEL_RADIUS * (nowTachoL-lastTachoL)/180; //left wheel displacement
+			distRWheel = Math.PI * NavigationLab.WHEEL_RADIUS *(nowTachoR-lastTachoR)/180; //right wheel displacement
 			lastTachoL = nowTachoL; //save current tacho counts for next iteration
 			lastTachoR = nowTachoR; 
 			deltaD = 0.5 * (distLWheel + distRWheel); //calculate vehicle displacement
 
-			deltaT = (distLWheel - distRWheel)/OdometryLab.TRACK; //compute change in robot's orientation
+			deltaT = (distLWheel - distRWheel)/NavigationLab.TRACK; //compute change in robot's orientation
 
 
 
