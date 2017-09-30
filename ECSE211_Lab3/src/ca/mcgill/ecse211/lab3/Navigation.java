@@ -50,7 +50,9 @@ public class Navigation {
 	private void turnTo(double theta) {
 		leftMotor.rotate((int)theta, true);
 	    rightMotor.rotate((int) theta, false);
+	    
 	}
+	
 	
 	private boolean isNavigating() {
 		
