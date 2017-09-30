@@ -31,7 +31,7 @@ public class NavigationLab {
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
 		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
 		
-		Navigation navigation = new Navigation(0,0,leftMotor,rightMotor);
+		Navigation navigation = new Navigation(2,1,leftMotor,rightMotor);
 
 		do {
 			// clear the display
@@ -49,7 +49,7 @@ public class NavigationLab {
 
 		if (buttonChoice == Button.ID_LEFT) {
 			t.clear();
-			navigation.travelTo(2, 1);
+			navigation.travelTo(1, 1);
 			
 			/*leftMotor.forward();
 			leftMotor.flt();

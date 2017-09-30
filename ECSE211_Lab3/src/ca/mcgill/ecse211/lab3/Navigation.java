@@ -7,10 +7,11 @@ public class Navigation {
 	
 	private double curX = 0.0;
 	private double curY = 0.0;
+	private double curAngle = 0.0;
 	private double angToTurn;
 	
 	private static final int FORWARD_SPEED = 200;
-	private static final int ROTATE_SPEED = 100;
+	private static final int ROTATE_SPEED = 130;
 	public static final double WHEEL_RADIUS = 2.1;
 	public static final double TRACK = 14.33; 
 	
@@ -35,19 +36,36 @@ public class Navigation {
 		System.out.println(destY);
 		if((destX - curX) > 0) {
 			angToTurn = Math.atan((destY - curY) / (destX - curX));
-			angToTurn = (angToTurn*180)/Math.PI;
-			System.out.println(angToTurn);
-			turnTo(angToTurn);
+			angToTurn = 90 - (angToTurn*180)/Math.PI;
+			/*System.out.println(angToTurn);
+			turnTo(angToTurn);*/
 		}
-		else if((destX - curX)< 0 && (destY - curY) > 0) {
+		else if((destX - curX)< 0 && (destY - curY) >= 0) {
 			angToTurn = Math.atan((destY - curY) / (destX - curX)) + Math.PI;
-			turnTo(angToTurn);
+			angToTurn = (angToTurn*180)/Math.PI;
+			/*System.out.println(angToTurn);
+			turnTo(angToTurn);*/
 		}
 		
 		else if((destX - curX) < 0 && (destY - curY) < 0) {
 			angToTurn = Math.atan((destY - curY) / (destX - curX)) - Math.PI;
-			turnTo(angToTurn);
+			angToTurn = 90- (angToTurn*180)/Math.PI;
+			/*System.out.println(angToTurn);
+			turnTo(angToTurn);*/
 		}
+		
+		if((angToTurn - curAngle) > -180 && (angToTurn - curAngle) < 180) {
+			angToTurn = angToTurn - curAngle;
+		}
+		else if((angToTurn - curAngle) < -180) {
+			angToTurn = (angToTurn - curAngle) + 360;
+		}
+		else if((angToTurn - curAngle) > 180) {
+			angToTurn = (angToTurn - curAngle) - 360;
+		}
+		System.out.println(angToTurn);
+		turnTo(angToTurn);
+		
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 		//leftMotor.forward();
