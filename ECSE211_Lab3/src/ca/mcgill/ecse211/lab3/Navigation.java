@@ -12,6 +12,8 @@ public class Navigation extends Thread {
 	private double destTheta = 0.0;
 	private double thetaDifference = 0; //thetaDifference
 	private double angleToTurn = 0;
+	private int i = 0; //index for coordinates array
+	private int j = 0;
 	private double [][] coordinates = {{0,2}, {1,1}, {2,2}, {2,1}, {1,0}};
 
 
@@ -30,25 +32,29 @@ public class Navigation extends Thread {
 		this.odometer = odometer1;
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
-		this.curX = 2;
-		this.curY = 1;
-
+		this.curX = odometer.getX();
+		this.curY = odometer.getY();
+		this.curTheta = odometer.getTheta();
+		
+		// reset the motors
+	    for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] {leftMotor, rightMotor}) {
+	      motor.stop();
+	      motor.setAcceleration(3000);
+	    }
 	}
 	
 //	public void run() {
 //		while (true) {
-//			for (int i = 0; i < 5; i++) {
-//				int j = 0;
-//				travelTo(coordinates[i][j], coordinates [i][j+1]);
-//			}
+//			this.curX = this.odometer.getX();
+//			this.curY = this.odometer.getY();
+//			this.curTheta = this.odometer.getTheta();
+//			travelTo(1,1);
+//			//travelTo(coordinates[i][j] * 30.48, coordinates [i][j+1] * 30.48);
+//			//i++;
 //		}
 //	}
 
 	public void travelTo(double destX, double destY) {
-//		curX = odometer.getX();
-//		curY = odometer.getY();
-		curTheta = odometer.getTheta(); //reads 90
-		
 		//x > 0, y > 0
 		if((destX - curX) > 0 && (destY - curY) > 0) {
 			destTheta = Math.atan2((destY - curY), (destX - curX));
@@ -73,10 +79,6 @@ public class Navigation extends Thread {
 		
 		
 		thetaDifference = destTheta - curTheta; //compute theta(d) - theta(r)
-		System.out.println("");
-		System.out.println("");
-		System.out.println("");
-		System.out.println(thetaDifference); //-45 deg, 63
 		
 		if((thetaDifference) > -180 && (thetaDifference) < 180) {
 			angleToTurn = thetaDifference;
@@ -92,9 +94,10 @@ public class Navigation extends Thread {
 		}
 		
 		
-		//curTheta = destTheta; //update curTheta
-		turnTo(angleToTurn);
-
+		//check if current theta is within range
+		if (!(angleToTurn > -3 && angleToTurn < 3)) {
+			turnTo(angleToTurn);
+		}
 		leftMotor.setSpeed(FORWARD_SPEED);
 		rightMotor.setSpeed(FORWARD_SPEED);
 		leftMotor.forward();
@@ -128,7 +131,7 @@ public class Navigation extends Thread {
 
 
 	private boolean isNavigating() {
-
+		
 		return false;
 	}
 

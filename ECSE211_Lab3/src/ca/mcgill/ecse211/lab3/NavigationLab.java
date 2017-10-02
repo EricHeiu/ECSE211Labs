@@ -32,7 +32,7 @@ public class NavigationLab {
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
-		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
+		//OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
 		
 		Navigation navigation = new Navigation(leftMotor,rightMotor, odometer);
 
@@ -70,18 +70,9 @@ public class NavigationLab {
 			odometer.start();
 			odometryDisplay.start();
 			//navigation.start(); //start the navigation thread
-			navigation.travelTo(1,1);
-			
-			if(buttonChoice == Button.ID_RIGHT){
-				odometryCorrection.start();
-			}
+			navigation.travelTo(1, 1);
 
-			// spawn a new Thread to avoid SquareDriver.drive() from blocking
-			(new Thread() {
-				public void run() {
-					//SquareDriver.drive(leftMotor, rightMotor, WHEEL_RADIUS, WHEEL_RADIUS, TRACK);
-				}
-			}).start();
+			
 		}
 
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
