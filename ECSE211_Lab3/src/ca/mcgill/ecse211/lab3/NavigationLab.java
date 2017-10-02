@@ -24,6 +24,7 @@ public class NavigationLab {
 
 	public static final double WHEEL_RADIUS = 2.1;
 	public static final double TRACK = 14.33; 
+	private static double[][] coordinates = { {0,2}, {1,1}, {2,2}, {2,1}, {1,0}};
 
 
 	public static void main(String[] args) {
@@ -32,9 +33,10 @@ public class NavigationLab {
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
-		//OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
 		
 		Navigation navigation = new Navigation(leftMotor,rightMotor, odometer);
+		
+
 
 		do {
 			// clear the display
@@ -69,7 +71,12 @@ public class NavigationLab {
 
 			odometer.start();
 			odometryDisplay.start();
-			//navigation.start(); //start the navigation thread
+			navigation.start(); //start the navigation thread
+//			for (int i = 0; i < 5; i++) {
+//				int j = 0;
+//				navigation.travelTo(coordinates[i][j], coordinates [i][j+1]);
+//			}
+			navigation.travelTo(0, 2);
 			navigation.travelTo(1, 1);
 
 			
