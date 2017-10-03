@@ -2,6 +2,7 @@ package ca.mcgill.ecse211.lab3;
 
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.Sound;
 
 public class Navigation extends Thread {
 
@@ -14,8 +15,9 @@ public class Navigation extends Thread {
 	private double angleToTurn = 0;
 	private int i = 0; //index for coordinates array
 	private int j = 0;
-	private boolean isAtNextPoint = false;
-	private double [][] coordinates = {{0,2}, {1,1}, {2,2}, {2,1}, {1,0}};
+	//private double [][] coordinates = {{1,1}, {0,2}, {2,2}, {2,1}, {1,0}};
+
+	private double distanceToTravel;
 
 
 	private static final int FORWARD_SPEED = 200;
@@ -25,6 +27,7 @@ public class Navigation extends Thread {
 
 	private EV3LargeRegulatedMotor leftMotor;
 	private EV3LargeRegulatedMotor rightMotor;
+	private boolean navigating;
 
 
 	//constructor 
@@ -36,95 +39,75 @@ public class Navigation extends Thread {
 		this.curX = odometer.getX();
 		this.curY = odometer.getY();
 		this.curTheta = odometer.getTheta();
+		navigating = false;
 
-		// reset the motors
+		//reset the motors
 		for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] {leftMotor, rightMotor}) {
 			motor.stop();
-			motor.setAcceleration(3000);
+			motor.setAcceleration(300);
 		}
 	}
 
 	public void run() {
-		while (true) {
+		//wait 5 seconds
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// there is nothing to be done here because it is not expected that
+			// the odometer will be interrupted by another thread
+		}
+		int i = 0;
+		while (i < NavigationLab.coordinates1.length) {
 			this.curX = this.odometer.getX();
 			this.curY = this.odometer.getY();
 			this.curTheta = this.odometer.getTheta();
-			//			travelTo(coordinates[i][j] * 30.48, coordinates [i][j+1] * 30.48);
-			//			i++;
-			//travelTo(0,2);
+			travelTo(NavigationLab.coordinates1[i], NavigationLab.coordinates1[i+1]);
+			i = i + 2;
 		}
+		//while (true) {}
 	}
 
 	public void travelTo(double destX, double destY) {
-		destX = destX * 30.48;
-		destY = destY * 30.48;
-		//x > 0, y > 0
-		if((destX - curX) >= 0 && (destY - curY) >= 0) {
-			destTheta = Math.atan2((destX - curX), (destY - curY));
-			destTheta = (destTheta*180)/Math.PI; 	
-		}
-		//x > 0, y < 0
-		else if((destX - curX) >= 0 && (destY - curY) <= 0) {
-			destTheta = Math.atan2((destX - curX), (destY - curY)); //convert angle between 0 to 360
-			destTheta = (destTheta*180)/Math.PI; 
-		}
-		//x < 0, y > 0
-		else if((destX - curX) <= 0 && (destY - curY) >= 0) {
-			destTheta = Math.atan2((destX - curX), (destY - curY)) + 2*Math.PI; 
-			destTheta = (destTheta*180)/Math.PI; 
+
+		//		this.curX = odometer.getX();
+		//		this.curY = odometer.getY();
+		//		this.curTheta = odometer.getTheta();
+
+		double deltaX = (destX*30.48) - curX;
+		double deltaY = (destY*30.48) - curY;
+
+		double destAngle = Math.atan2(deltaX, deltaY) * 180 /Math.PI; //angle is between -180 to 180 degrees
+
+		//convert destAngle to be between 0 to 360 degrees 
+		if (destAngle < 0) {
+			destAngle = destAngle + 360;
 		}
 
-		//x < 0, y < 0
-		else if((destX - curX) <= 0 && (destY - curY) <= 0) {
-			destTheta = Math.atan2((destX - curX), (destY - curY)) + 2*Math.PI;//convert angle between 0 to 360
-			destTheta = (destTheta*180)/Math.PI;
-		}
-		
-		thetaDifference = destTheta - curTheta; //compute theta(d) - theta(r)
+		thetaDifference = destAngle - curTheta; //compute theta(d) - theta(r)
 
-		if((thetaDifference) > -180 && (thetaDifference) < 180) {
-			angleToTurn = thetaDifference;
-
+		if (!(thetaDifference <= 5 && thetaDifference >= -5)) {
+			turnTo(destAngle);
+			Sound.beep();
 		}
 
-		else if((thetaDifference) < -180) {
-			angleToTurn = (thetaDifference) + 360;
-		}
+		distanceToTravel = Math.sqrt(Math.pow(deltaY, 2) + Math.pow(deltaX,2));
+		leftMotor.setSpeed(FORWARD_SPEED);
+		rightMotor.setSpeed(FORWARD_SPEED);
+		navigating = true;
+		leftMotor.rotate(convertDistance(WHEEL_RADIUS, distanceToTravel), true);
+		rightMotor.rotate(convertDistance(WHEEL_RADIUS, distanceToTravel), false);
+		Sound.buzz();
+		navigating = false;
+		//this.curTheta = odometer.getTheta();
 
-		else if((thetaDifference) > 180) {
-			angleToTurn = (thetaDifference) - 360;
-		}
+		//if ((curTheta <= destAngle + 2) && (curTheta >= destAngle - 2)) {
 
 
-		//check if current theta is within range
-		if (!(angleToTurn > -3 && angleToTurn < 3)) {
-			turnTo(angleToTurn);
-		}
+		//}
 
-		//		while (isAtNextPoint == false) {
-		//			if ((odometer.getX()/30.48 <= 0.2+destX && odometer.getX()/30.48 >= destX - 0.2 ) 
-		//					&& (odometer.getY()/30.48 <= 0.2+destY && odometer.getY()/30.48 >= destY-0.2)) {
-		//				leftMotor.setSpeed(FORWARD_SPEED);
-		//				rightMotor.setSpeed(FORWARD_SPEED);
-		//				leftMotor.forward();
-		//				rightMotor.forward();
-		//			}
-		//			else {
-		//				leftMotor.stop();
-		//				rightMotor.stop();
-		//				isAtNextPoint = true;
-		//			}
-		//		}
-		
-		while (!((curX <= 2+destX && curX >= destX - 2 ) 
-				&& (curY <= 2+destY && curY >= destY-2))) {
-			leftMotor.setSpeed(FORWARD_SPEED);
-			rightMotor.setSpeed(FORWARD_SPEED);
-			leftMotor.forward();
-			rightMotor.forward();
-		}
-		leftMotor.stop();
-		rightMotor.stop();
+
+
+
 
 	}
 
@@ -135,28 +118,26 @@ public class Navigation extends Thread {
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 
-		if(thetaDifference > -180 && thetaDifference < 180 ) {
-			leftMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta * 2), false);
-			rightMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta * 2), true);
+		if((thetaDifference) > -180 && (thetaDifference) < 180) {
+			angleToTurn = thetaDifference;
 		}
 		//turning cw
 		else if((thetaDifference) < -180) {
-			leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta * 2), true);
-			rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta * 2), false);
+			angleToTurn = (thetaDifference) + 360;
 		}
 		//turning ccw
 		else if((thetaDifference) > 180) {
-			leftMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, theta * 2), false);
-			rightMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, theta * 2), true);
+			angleToTurn = (thetaDifference) - 360;
 		}
-
+		leftMotor.rotate(convertAngle(WHEEL_RADIUS, TRACK, angleToTurn), true);
+		rightMotor.rotate(-convertAngle(WHEEL_RADIUS, TRACK, angleToTurn), false);
 
 	}
 
 
 	private boolean isNavigating() {
 
-		return false;
+		return navigating;
 	}
 
 	private static int convertDistance(double radius, double distance) {

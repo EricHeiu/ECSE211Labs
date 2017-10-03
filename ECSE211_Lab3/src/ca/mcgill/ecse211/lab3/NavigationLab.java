@@ -24,7 +24,9 @@ public class NavigationLab {
 
 	public static final double WHEEL_RADIUS = 2.1;
 	public static final double TRACK = 14.33; 
-	private static double[][] coordinates = { {0,2}, {1,1}, {2,2}, {2,1}, {1,0}};
+	
+	public static double[][] coordinates = {{0,1}, {1,2}, {1,0}, {2,1}, {2,2}};
+	public static double[] coordinates1 = {0,1,1,2,1,0,2,1,2,2};
 
 
 	public static void main(String[] args) {
@@ -33,21 +35,20 @@ public class NavigationLab {
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		Odometer odometer = new Odometer(leftMotor, rightMotor);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
+		//OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
 		
 		Navigation navigation = new Navigation(leftMotor,rightMotor, odometer);
-		
-
 
 		do {
 			// clear the display
 			t.clear();
 
 			// ask the user whether the motors should drive in a square or float
-			t.drawString("< Left | Right >", 0, 0);
-			t.drawString("       |        ", 0, 1);
-			t.drawString(" Float | Drive  ", 0, 2);
-			t.drawString("motors | in a   ", 0, 3);
-			t.drawString("       | square ", 0, 4);
+			t.drawString("< Left  | Right >", 0, 0);
+			t.drawString("        |        ", 0, 1);
+			t.drawString(" Nav    | Nav  ", 0, 2);
+			t.drawString(" with   | with no  ", 0, 3);
+			t.drawString("avoid   | avoid ", 0, 4);
 
 			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
@@ -55,29 +56,26 @@ public class NavigationLab {
 
 		if (buttonChoice == Button.ID_LEFT) {
 			t.clear();
+			System.exit(0);
 
 		} else {
 			// clear the display
 			t.clear();
 
 			// ask the user whether the motors should drive in a square or float
-			t.drawString("< Left | Right >", 0, 0);
-			t.drawString("  No   | with   ", 0, 1);
-			t.drawString(" corr- | corr-  ", 0, 2);
-			t.drawString(" ection| ection ", 0, 3);
-			t.drawString("       |        ", 0, 4);
-
+			t.drawString("Press ", 0, 0);
+			t.drawString(" to ", 0, 1);
+			t.drawString("start", 0, 2);
 			buttonChoice = Button.waitForAnyPress();
 
 			odometer.start();
 			odometryDisplay.start();
 			navigation.start(); //start the navigation thread
-//			for (int i = 0; i < 5; i++) {
-//				int j = 0;
-//				navigation.travelTo(coordinates[i][j], coordinates [i][j+1]);
+			
+//			for(int i=0; i<5; i++) {
+//				int j=0;
+//				navigation.travelTo(coordinates[i][j], coordinates[i][j+1]);
 //			}
-			navigation.travelTo(0, 2);
-			navigation.travelTo(1, 1);
 
 			
 		}

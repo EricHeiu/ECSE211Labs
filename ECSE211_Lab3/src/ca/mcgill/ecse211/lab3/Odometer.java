@@ -28,7 +28,7 @@ public class Odometer extends Thread {
 		this.rightMotor = rightMotor;
 		this.x = 0.0;
 		this.y = 0.0;
-		this.theta = 0;
+		this.theta = 0.0;
 		this.lastTachoL = 0;
 		this.lastTachoR = 0;
 		this.nowTachoL = 0;
@@ -52,7 +52,7 @@ public class Odometer extends Thread {
 			lastTachoR = nowTachoR; 
 			deltaD = 0.5 * (distLWheel + distRWheel); //calculate vehicle displacement
 
-			deltaT = (distRWheel - distLWheel)/NavigationLab.TRACK; //compute change in robot's orientation
+			deltaT = (distLWheel - distRWheel)/NavigationLab.TRACK; //compute change in robot's orientation
 
 
 
@@ -63,11 +63,11 @@ public class Odometer extends Thread {
 				 * 
 				 */
 				// TODO replace example value
-				//if theta exceeds 359.9, reset it back to 0 degrees
+				//if current theta exceeds 359.9, reset it back to 0 degrees
 				if(((deltaT*180/Math.PI) + theta)  >= 360){
 					theta = 0;
 				}
-				//if theta is below 0, set it to 359.9 degrees
+				//if current theta is below 0, set it to 359.9 degrees
 				else if(((deltaT*180/Math.PI) + theta)  < 0){
 					theta = 359.9;
 				}
