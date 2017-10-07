@@ -20,9 +20,11 @@ public class LocalizationLab {
   public static final EV3LargeRegulatedMotor rightMotor =
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 
+  //Initialize the UltrasonicSensor
   public static final Port usPort = LocalEV3.get().getPort("S1");
 
-  public static double[] coordinates = {2, 1, 1, 1, 1, 2, 2, 0};
+
+  //public static double[] coordinates = {2, 1, 1, 1, 1, 2, 2, 0};
   // public static double[] coordinates = {0, 2, 1, 1, 2, 2, 2, 1, 1, 0};
   // public static double[] coordinates = {1, 1, 0, 2, 2, 2, 2, 1, 1, 0};
   // public static double[] coordinates = {0, 1, 1, 2, 1, 0, 2, 1, 2, 2};
@@ -68,7 +70,7 @@ public class LocalizationLab {
       odometer.start();
       odometryDisplay.start();
       //navigation.start();
-      
+
       usLocal.risingEdge();
 
 
@@ -78,9 +80,8 @@ public class LocalizationLab {
       t.drawString("light", 0, 3);
       t.drawString("localization", 0, 4);
       buttonChoice = Button.waitForAnyPress();
-      
-      
-      
+
+
 
     } else {
       // clear the display
@@ -98,9 +99,8 @@ public class LocalizationLab {
       t.drawString("light", 0, 3);
       t.drawString("localization", 0, 4);
       buttonChoice = Button.waitForAnyPress();
-      
-      
-      
+
+
     }
 
     while (Button.waitForAnyPress() != Button.ID_ESCAPE);
