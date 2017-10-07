@@ -69,6 +69,7 @@ public class LocalizationLab {
       // start all necessary threads
       odometer.start();
       odometryDisplay.start();
+      usPoll.start();
       //navigation.start();
 
       usLocal.risingEdge();

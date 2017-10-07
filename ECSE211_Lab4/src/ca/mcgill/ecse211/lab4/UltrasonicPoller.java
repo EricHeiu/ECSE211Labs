@@ -40,5 +40,8 @@ public class UltrasonicPoller extends Thread {
       } // Poor man's timed sampling
     }
   }
+  public float[] readUSDistance() {
+    return this.usData;
+}
 
 }
