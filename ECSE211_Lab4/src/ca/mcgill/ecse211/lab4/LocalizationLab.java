@@ -37,7 +37,6 @@ public class LocalizationLab {
     // Instantiate all objects
     final TextLCD t = LocalEV3.get().getTextLCD();
     Odometer odometer = new Odometer(leftMotor, rightMotor);
-    OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t);
     //Navigation navigation = new Navigation(leftMotor, rightMotor, odometer);
     @SuppressWarnings("resource") // Because we don't bother to close this resource
     SensorModes usSensor = new EV3UltrasonicSensor(usPort); // usSensor is the instance
@@ -46,6 +45,7 @@ public class LocalizationLab {
     float[] usData = new float[usDistance.sampleSize()]; // usData is the buffer in which data are
     // returned
     UltrasonicPoller usPoll = new UltrasonicPoller(usDistance, usData);
+    OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t, usPoll);
     UltrasonicLocalizer usLocal = new UltrasonicLocalizer(odometer, usPoll, leftMotor, rightMotor);
 
     do {
@@ -53,11 +53,11 @@ public class LocalizationLab {
       t.clear();
 
       // ask the user whether to navigate course with or without avoidance
-      t.drawString("< Left       |     Right >", 0, 0);
-      t.drawString("             |           ", 0, 1);
-      t.drawString(" Rising      |    Falling  ", 0, 2);
-      t.drawString(" edge        |      edge  ", 0, 3);
-      t.drawString("localization |   localization ", 0, 4);
+      t.drawString("< Left   | Right >", 0, 0);
+      t.drawString("         |        ", 0, 1);
+      t.drawString(" Rising  | Falling  ", 0, 2);
+      t.drawString(" edge    |  edge  ", 0, 3);
+      t.drawString("local    | local", 0, 4);
 
       buttonChoice = Button.waitForAnyPress();
     } while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
@@ -75,11 +75,11 @@ public class LocalizationLab {
       usLocal.risingEdge();
 
 
-      t.drawString("Press ", 0, 0);
+     /* t.drawString("Press ", 0, 0);
       t.drawString(" to ", 0, 1);
       t.drawString("start", 0, 2);
       t.drawString("light", 0, 3);
-      t.drawString("localization", 0, 4);
+      t.drawString("localization", 0, 4);*/
       buttonChoice = Button.waitForAnyPress();
 
 
@@ -91,14 +91,15 @@ public class LocalizationLab {
       // start all necessary threads
       odometer.start();
       odometryDisplay.start();
+      usPoll.start();
       //navigation.start();
       usLocal.fallingEdge();
 
-      t.drawString("Press ", 0, 0);
+     /* t.drawString("Press ", 0, 0);
       t.drawString(" to ", 0, 1);
       t.drawString("start", 0, 2);
       t.drawString("light", 0, 3);
-      t.drawString("localization", 0, 4);
+      t.drawString("localization", 0, 4);*/
       buttonChoice = Button.waitForAnyPress();
 
 

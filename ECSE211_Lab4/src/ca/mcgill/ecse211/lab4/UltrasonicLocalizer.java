@@ -16,7 +16,7 @@ public class UltrasonicLocalizer {
   private double backWallTheta;
   private boolean corrected = false;
   //private final double NOISE_MARGIN = 20;
-  private final double D = 20;
+  private final double D = 40;
   private final double K = 20; //change name
 
   public UltrasonicLocalizer(Odometer odo, UltrasonicPoller poll, 
@@ -31,21 +31,23 @@ public class UltrasonicLocalizer {
   public void fallingEdge() {
     leftMotor.setSpeed(150);
     rightMotor.setSpeed(150);
-    while(usPoll.readUSDistance()[0] > D-K) {
-      leftMotor.forward();
-      rightMotor.backward();
-      if(usPoll.readUSDistance()[0] < D-K) {
+    leftMotor.forward();
+    rightMotor.backward();
+//    while(usPoll.readUSDistance() > D-K) {
+//      leftMotor.forward();
+//      rightMotor.backward();
+      if(usPoll.readUSDistance() < 20) {
         Sound.beep();
         leftMotor.stop();
         rightMotor.stop();
         backWallTheta = odometer.getTheta();
-        break;
+        //break;
       }
-    }
-    while(usPoll.readUSDistance()[0] > D-K) {
+    //}
+    while(usPoll.readUSDistance() > D-K) {
       leftMotor.backward();
       rightMotor.forward();
-      if(usPoll.readUSDistance()[0] < D-K) {
+      if(usPoll.readUSDistance() < D-K) {
         Sound.beep();
         leftMotor.stop();
         rightMotor.stop();
