@@ -3,7 +3,6 @@ package ca.mcgill.ecse211.lab3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Odometer extends Thread {
-
   // robot position
   private double x; // current x posisition
   private double y; // current y position

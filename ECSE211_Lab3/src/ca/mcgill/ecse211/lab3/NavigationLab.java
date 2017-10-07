@@ -20,8 +20,8 @@ public class NavigationLab {
   public static final EV3LargeRegulatedMotor rightMotor =
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 
-   public static double[] coordinates = {2, 1, 1, 1, 1, 2, 2, 0};
-  //public static double[] coordinates = {0, 2, 1, 1, 2, 2, 2, 1, 1, 0};
+  public static double[] coordinates = {2, 1, 1, 1, 1, 2, 2, 0};
+  // public static double[] coordinates = {0, 2, 1, 1, 2, 2, 2, 1, 1, 0};
   // public static double[] coordinates = {1, 1, 0, 2, 2, 2, 2, 1, 1, 0};
   // public static double[] coordinates = {0, 1, 1, 2, 1, 0, 2, 1, 2, 2};
 
@@ -58,7 +58,6 @@ public class NavigationLab {
     } else {
       // clear the display
       t.clear();
-
       t.drawString("Press ", 0, 0);
       t.drawString(" to ", 0, 1);
       t.drawString("start", 0, 2);
@@ -73,6 +72,4 @@ public class NavigationLab {
     while (Button.waitForAnyPress() != Button.ID_ESCAPE);
     System.exit(0);
   }
-
-
 }
