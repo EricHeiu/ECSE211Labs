@@ -23,30 +23,22 @@ public class LocalizationLab {
   //Initialize the UltrasonicSensor
   public static final Port usPort = LocalEV3.get().getPort("S1");
 
-
-  //public static double[] coordinates = {2, 1, 1, 1, 1, 2, 2, 0};
-  // public static double[] coordinates = {0, 2, 1, 1, 2, 2, 2, 1, 1, 0};
-  // public static double[] coordinates = {1, 1, 0, 2, 2, 2, 2, 1, 1, 0};
-  // public static double[] coordinates = {0, 1, 1, 2, 1, 0, 2, 1, 2, 2};
-
-
-
   public static void main(String[] args) {
     int buttonChoice;
 
     // Instantiate all objects
     final TextLCD t = LocalEV3.get().getTextLCD();
     Odometer odometer = new Odometer(leftMotor, rightMotor);
-    //Navigation navigation = new Navigation(leftMotor, rightMotor, odometer);
+    Navigation navigation = new Navigation(leftMotor, rightMotor, odometer);
     @SuppressWarnings("resource") // Because we don't bother to close this resource
     SensorModes usSensor = new EV3UltrasonicSensor(usPort); // usSensor is the instance
     SampleProvider usDistance = usSensor.getMode("Distance"); // usDistance provides samples from
-    // this instance
+                                                              // this instance
     float[] usData = new float[usDistance.sampleSize()]; // usData is the buffer in which data are
-    // returned
+                                                          // returned
     UltrasonicPoller usPoll = new UltrasonicPoller(usDistance, usData);
     OdometryDisplay odometryDisplay = new OdometryDisplay(odometer, t, usPoll);
-    UltrasonicLocalizer usLocal = new UltrasonicLocalizer(odometer, usPoll, leftMotor, rightMotor);
+    UltrasonicLocalizer usLocal = new UltrasonicLocalizer(odometer, usPoll, leftMotor, rightMotor, navigation);
 
     do {
       // clear the display
@@ -75,7 +67,7 @@ public class LocalizationLab {
       usLocal.risingEdge();
 
 
-     /* t.drawString("Press ", 0, 0);
+      /* t.drawString("Press ", 0, 0);
       t.drawString(" to ", 0, 1);
       t.drawString("start", 0, 2);
       t.drawString("light", 0, 3);
@@ -95,7 +87,7 @@ public class LocalizationLab {
       //navigation.start();
       usLocal.fallingEdge();
 
-     /* t.drawString("Press ", 0, 0);
+      /* t.drawString("Press ", 0, 0);
       t.drawString(" to ", 0, 1);
       t.drawString("start", 0, 2);
       t.drawString("light", 0, 3);

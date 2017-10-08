@@ -36,7 +36,7 @@ public class OdometryDisplay extends Thread {
       t.drawString("X:              ", 0, 0);
       t.drawString("Y:              ", 0, 1);
       t.drawString("T:              ", 0, 2);
-      t.drawString("Distance:" + usPoll.readUSDistance() , 0, 3);
+      t.drawString("Distance:" + formattedDoubleToString(usPoll.readUSDistance(), 2) , 0, 3);
 
       // get the odometry information
       odometer.getPosition(position, new boolean[] {true, true, true});
